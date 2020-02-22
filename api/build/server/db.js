@@ -1,15 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.todoLists = new Array();
-exports.todoLists.push({
+var todoLists = new Array();
+todoLists.push({
     id: 1,
     title: "First List",
     items: [
         {
-            category: "Empty",
+            id: 1,
+            category: "none",
             description: "A new item",
             isComplete: false,
             listId: 1
         }
     ]
 });
+// in memory storage
+var db = {
+    todoLists: todoLists
+};
+exports.default = db;

@@ -2,13 +2,13 @@
 import express from "express";
 
 // app
-import { todoItem } from "../models/todoItem";
-import { todoLists } from "../server/db";
+import TodoItem from "../models/todo-item";
+import db from "../server/db";
 
 export default function(app: express.Application) {
   // get todo items for a specific list
   app.get("/todo-items/:listId", (req, res) => {
-    const list = todoLists.find(l => {
+    const list = db.todoLists.find(l => {
       return l.id === parseInt(req.params.listId);
     });
 
@@ -29,7 +29,7 @@ export default function(app: express.Application) {
   //    "listId": 0
   // }
   app.post("/todo-items", (req, res) => {
-    const list = todoLists.find(l => {
+    const list = db.todoLists.find(l => {
       return l.id === req.body.listId;
     });
 
@@ -38,7 +38,7 @@ export default function(app: express.Application) {
       return;
     }
 
-    const item: todoItem = {
+    const item: TodoItem = {
       id: list.items.length + 1,
       category: req.body.category,
       description: req.body.description,
@@ -60,7 +60,7 @@ export default function(app: express.Application) {
   //    "listId": 0
   // }
   app.put("/todo-items/:itemId", (req, res) => {
-    const list = todoLists.find(l => {
+    const list = db.todoLists.find(l => {
       return l.id === req.body.listId;
     });
 
