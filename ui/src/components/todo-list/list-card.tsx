@@ -29,7 +29,7 @@ const ListCard: React.FC<Props> = props => {
   return (
     <Card className={classes.root}>
       <CardHeader
-        avatar={<Icon>list</Icon>}
+        avatar={<Icon>list_alt</Icon>}
         title={`List ${props.listId}`}
         action={
           <IconButton onClick={() => props.addItem(true)}>

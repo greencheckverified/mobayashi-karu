@@ -16,7 +16,7 @@ const todoItemsClient = {
       })
       .catch(error => console.log("error", error));
   },
-  post: (todoItem: TodoItem) => {
+  post: async (todoItem: TodoItem): Promise<void> => {
     var requestHeaders = new Headers();
     requestHeaders.append("Content-Type", "application/json");
 
@@ -28,7 +28,7 @@ const todoItemsClient = {
       body: json
     };
 
-    fetch(`${baseUrl}/todo-items`, requestOptions)
+    await fetch(`${baseUrl}/todo-items`, requestOptions)
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log("error", error));
@@ -38,7 +38,7 @@ const todoItemsClient = {
     requestHeaders.append("Content-Type", "application/json");
 
     var json = JSON.stringify(todoItem);
-    console.log(json);
+
     var requestOptions = {
       method: "PUT",
       headers: requestHeaders,

@@ -20,21 +20,26 @@ interface Props {
 }
 
 const EditItemModal: React.FC<Props> = props => {
+  // state
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
 
+  // methods
   const editItem = () => {
-    api.todoItems.put({
-      category: category,
-      description: description,
-      listId: props.listId,
-      id: props.itemId,
-      isComplete: false
-    });
-
-    props.handleClose();
+    api.todoItems
+      .put({
+        category: category,
+        description: description,
+        listId: props.listId,
+        id: props.itemId,
+        isComplete: false
+      })
+      .then(() => {
+        props.handleClose();
+      });
   };
 
+  // markup
   return (
     <Dialog onClose={props.handleClose} open={props.isOpen}>
       <DialogTitle>Add new todo list</DialogTitle>

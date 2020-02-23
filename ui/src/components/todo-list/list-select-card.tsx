@@ -1,5 +1,5 @@
 // fx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Card,
   CardHeader,
@@ -12,8 +12,7 @@ import {
 } from "@material-ui/core";
 
 // app
-import api from "../../api";
-import TodoListModel from "../../models/todo-list";
+import TodoList from "../../models/todo-list";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,22 +22,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface Props {
+  todoLists: TodoList[];
   selectedIndex: number;
   handleListClick: (e: React.MouseEvent, id: number) => void;
   addList: (isOpen: boolean) => void;
 }
 
 const ListSelectCard: React.FC<Props> = props => {
+  // styles
   const classes = useStyles();
 
-  const [todoLists, setTodoLists] = useState(new Array<TodoListModel>());
-
-  useEffect(() => {
-    api.todoLists.get().then(r => {
-      setTodoLists(r);
-    });
-  }, []);
-
+  // markup
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -52,8 +46,8 @@ const ListSelectCard: React.FC<Props> = props => {
       />
       <CardContent>
         <List>
-          {todoLists &&
-            todoLists.map(l => {
+          {props.todoLists &&
+            props.todoLists.map(l => {
               return (
                 <ListItem
                   key={l.id}

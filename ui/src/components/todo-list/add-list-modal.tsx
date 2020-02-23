@@ -18,11 +18,14 @@ interface Props {
 }
 
 const AddListModal: React.FC<Props> = props => {
+  // state
   const [title, setTitle] = useState("");
 
+  // methods
   const addList = () => {
-    api.todoLists.post({ title: title, id: 0, items: [] });
-    props.handleClose();
+    api.todoLists.post({ title: title, id: 0, items: [] }).then(() => {
+      props.handleClose();
+    });
   };
 
   return (

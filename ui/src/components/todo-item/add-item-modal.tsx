@@ -19,21 +19,26 @@ interface Props {
 }
 
 const AddItemModal: React.FC<Props> = props => {
+  // state
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
 
+  // methods
   const addItem = () => {
-    api.todoItems.post({
-      category: category,
-      description: description,
-      listId: props.listId,
-      id: 0,
-      isComplete: false
-    });
-
-    props.handleClose();
+    api.todoItems
+      .post({
+        category: category,
+        description: description,
+        listId: props.listId,
+        id: 0,
+        isComplete: false
+      })
+      .then(() => {
+        props.handleClose();
+      });
   };
 
+  // markup
   return (
     <Dialog onClose={props.handleClose} open={props.isOpen}>
       <DialogTitle>Add new todo list</DialogTitle>
@@ -50,7 +55,7 @@ const AddItemModal: React.FC<Props> = props => {
           onChange={e => setCategory(e.target.value)}
         />
 
-        <TextField          
+        <TextField
           fullWidth
           margin="dense"
           id="description"

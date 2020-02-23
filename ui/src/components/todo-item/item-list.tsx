@@ -15,59 +15,51 @@ import api from "../../api";
 import TodoItem from "../../models/todo-item";
 
 interface Props {
+  todoItems: TodoItem[];  
   listId: number;
-  handleItemClick: (e: React.MouseEvent, index: number) => void;  
+  handleItemClick: (e: React.MouseEvent, index: number) => void;
 }
 
 const ItemList: React.FC<Props> = props => {
   // state
   const [search, setSearch] = useState("");
-  const [searchableList, setSearchableList] = useState(new Array<TodoItem>());
-  const [todoItems, setTodoItems] = useState(new Array<TodoItem>());
+  const [searchableItems, setSearchableItems] = useState(new Array<TodoItem>());
 
   // lifecycle
   useEffect(() => {
-    loadItems();
-  }, [props.listId]);
-
-  // methods
-  const loadItems = () => {
-    if (props.listId) {
-      api.todoItems.get(props.listId).then(r => {
-        setSearchableList(r);
-        setTodoItems(r);
-      });
-    }
-  };
+    setSearchableItems(props.todoItems);
+  }, [props.todoItems]);
 
   const markComplete = (itemId: number) => {
-    const item = todoItems.find(i => {
+    const item = props.todoItems.find(i => {
       return i.id === itemId;
     });
 
     if (item) {
       item.isComplete = !item.isComplete;
       api.todoItems.put(item).then(() => {
-        loadItems();
+        api.todoItems.get(props.listId).then(r => {
+          setSearchableItems(r);
+        });
       });
     }
   };
 
   const searchItems = (searchTerm: string) => {
     if (!searchTerm) {
-      setTodoItems(searchableList);
+      setSearchableItems(props.todoItems);
     }
 
     setSearch(searchTerm);
 
-    const items = searchableList.filter(i => {
+    const items = props.todoItems.filter(i => {
       return (
         i.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         i.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
 
-    setTodoItems(items);
+    setSearchableItems(items);
   };
 
   // markup
@@ -88,8 +80,8 @@ const ItemList: React.FC<Props> = props => {
         </ListSubheader>
       }
     >
-      {todoItems &&
-        todoItems.map(l => {
+      {searchableItems &&
+        searchableItems.map(l => {
           return (
             <ListItem
               key={l.id}

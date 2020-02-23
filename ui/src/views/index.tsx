@@ -1,8 +1,12 @@
 // fx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, makeStyles, Grid } from "@material-ui/core";
 
 // app
+import api from "../api";
+import TodoList from "../models/todo-list";
+import TodoItem from "../models/todo-item";
+
 import ListCard from "../components/todo-list/list-card";
 import ListSelectCard from "../components/todo-list/list-select-card";
 import AddListModal from "../components/todo-list/add-list-modal";
@@ -52,6 +56,34 @@ const View = () => {
   const [addItemModalOpen, setAddItemModalOpen] = useState(false);
   const [editItemModalOpen, setEditItemModalOpen] = useState(false);
 
+  const [todoLists, setTodoLists] = useState(new Array<TodoList>());
+  const [todoItems, setTodoItems] = useState(new Array<TodoItem>());
+
+  // lifecycle
+  useEffect(() => {
+    loadLists();
+  }, []);
+
+  const loadLists = () => {
+    api.todoLists.get().then(r => {
+      setTodoLists(r);
+    });
+  };
+
+  // lifecycle
+  useEffect(() => {
+    loadItems();
+  }, [selectedList]);
+
+  // methods
+  const loadItems = () => {
+    if (selectedList) {
+      api.todoItems.get(selectedList).then(r => {        
+        setTodoItems(r);
+      });
+    }
+  };
+
   // methods
   const handleListClick = (e: React.MouseEvent, index: number) => {
     setSelectedList(index);
@@ -79,6 +111,7 @@ const View = () => {
         <Grid container spacing={3} className={classes.grid}>
           <Grid item xs={4}>
             <ListSelectCard
+              todoLists={todoLists}
               selectedIndex={selectedList}
               handleListClick={handleListClick}
               addList={setAddListModalOpen}
@@ -87,8 +120,9 @@ const View = () => {
           <Grid item xs={8}>
             <ListCard listId={selectedList} addItem={setAddItemModalOpen}>
               <ItemList
+                todoItems={todoItems}                
                 listId={selectedList}
-                handleItemClick={handleItemClick}                
+                handleItemClick={handleItemClick}
               />
             </ListCard>
           </Grid>
@@ -97,6 +131,7 @@ const View = () => {
         <AddListModal
           isOpen={addListModalOpen}
           handleClose={() => {
+            loadLists();
             setAddListModalOpen(false);
           }}
         />
@@ -105,6 +140,7 @@ const View = () => {
           listId={selectedList}
           isOpen={addItemModalOpen}
           handleClose={() => {
+            loadItems();
             setAddItemModalOpen(false);
           }}
         />
@@ -114,6 +150,7 @@ const View = () => {
           itemId={selectedItem}
           isOpen={editItemModalOpen}
           handleClose={() => {
+            loadItems();
             setEditItemModalOpen(false);
           }}
         />

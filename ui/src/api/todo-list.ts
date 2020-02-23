@@ -16,7 +16,7 @@ const todoListClient = {
       })
       .catch(error => console.log("error", error));
   },
-  post: (todoList: TodoList) => {
+  post: async (todoList: TodoList): Promise<void> => {
     var requestHeaders = new Headers();
     requestHeaders.append("Content-Type", "application/json");
 
@@ -28,7 +28,7 @@ const todoListClient = {
       body: json
     };
 
-    fetch(`${baseUrl}/todo-lists`, requestOptions)
+    await fetch(`${baseUrl}/todo-lists`, requestOptions)
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log("error", error));
