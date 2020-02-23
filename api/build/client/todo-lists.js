@@ -19,7 +19,7 @@ function default_1(app) {
         var list = req.body;
         list.id = db_1.default.todoLists.length + 1;
         db_1.default.todoLists.push(list);
-        res.send(list.id);
+        res.send({ listId: list.id });
     });
     // update an existing todo list
     // req.body: 

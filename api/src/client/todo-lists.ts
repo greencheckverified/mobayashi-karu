@@ -20,7 +20,7 @@ export default function(app: express.Application) {
 
     db.todoLists.push(list);
 
-    res.send(list.id);
+    res.send({listId: list.id});
   });
 
   // update an existing todo list
